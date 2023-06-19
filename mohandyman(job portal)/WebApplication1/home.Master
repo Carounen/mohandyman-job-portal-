@@ -1,0 +1,360 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="home.master.cs" Inherits="WebApplication1.home" %>
+
+<%@ Register Src="~/logadd.ascx" TagPrefix="uc" TagName="login" %>
+
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title><%: Page.Title %> - Application Name</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+    <%--<webopt:BundleReference runat="server" Path="~/Content/css" />--%>
+    <link href="Content/layout.css" rel="stylesheet" />
+     <link rel="icon" href="favicon/favicon.ico">
+ 
+    <script src="https://kit.fontawesome.com/8210be884a.js" crossorigin="anonymous"></script>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+        rel="stylesheet" />
+    <link href="Content/styles.css" rel="stylesheet" />
+
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.13.1/datatables.min.css" />
+    <link href="Content/ajax.css" rel="stylesheet" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+    <style>
+        .modal-header, h4, .close {
+            background-color: #5CBBB2;
+            color: white !important;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .modal-footer {
+            background-color: #BCE4CE;
+        }
+
+        .sear{
+            background-color:aliceblue;
+        }
+
+        footer .footer-top {
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+
+
+      
+    </style>
+
+</head>
+<body>
+    <form id="form1" runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager 
+see http://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <%--<asp:ScriptReference Name="bootstrap" />--%>
+                <asp:ScriptReference Name="WebForms.js"
+                    Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js"
+                    Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js"
+                    Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js"
+                    Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js"
+                    Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js"
+                    Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js"
+                    Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js"
+                    Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+       
+         <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="/home">VIDE GRENIER</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                       
+                   
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">more</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                               
+                        
+                              
+                                  <li class="dropdown-item"><a class="nav-link" runat="server" id="add"
+                                href="/Addprod">Add product</a></li>
+
+                               
+                                 
+                              <li><a class="dropdown-item"  href="viewprod.aspx">View Product</a></li>
+                                <li><a class="dropdown-item"  href="viewcategory.aspx">View categories</a></li>
+                               
+                                 <li class="nav-item"><a class="nav-link" runat="server" id="xx"
+                                href="/viewandmanage">View Added product</a></li>
+
+                                 <li class="nav-item"><a class="nav-link" runat="server" id="A6"
+                                href="/viewreserveproduct">View Reserved</a></li>
+
+                             
+                            </ul>
+                        </li>
+                         <asp:Panel runat="server" ID="pnllog">
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle"
+                                        data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+                                        aria-expanded="false">Login<span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            <a class="dropdown-item"
+                                                href="<%= ResolveClientUrl("login.aspx") %>">User</a></li>
+                                        
+                                        <li role="separator" class="divider"></li>
+                                        <li class="nav-item">
+                                            <a rel="modal:open" class="dropdown-item" id="modopen"
+                                                data-bs-toggle="modal" href="#modadmin">Admin</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                
+                    
+                       </asp:Panel>
+                         <!-- Menu to view user profile -->
+                        <asp:Panel runat="server" class="nav navbar-nav" ID="pnlprofile" Visible="false">
+                            <li class="dropdown">
+                            
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <asp:HyperLink CssClass="dropdown-item" runat="server" ID="hyuser">View Profile</asp:HyperLink></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                        <asp:Button runat="server" ID="btndeacuser" Text="Deactivate Account"
+                                            CssClass="btn btn-outline-danger" /></li>
+                                </ul>
+                            </li>
+                        </asp:Panel>
+
+                                   <li class="nav-item"><a class="nav-link" runat="server" id="hyregister"
+                                href="~/Register">Register</a></li>
+
+                        <li class="nav-item"><a class="nav-link" runat="server" id="a8"
+                                href="~/updateprofile">Update profile</a></li>
+
+                         <asp:Panel runat="server" class="nav navbar-nav" ID="Pane" Visible="false">
+                      <li class="nav-item dropdown" >
+                            <a class="nav-link dropdown-toggle" href="#"  role="button" id="priv" data-bs-toggle="dropdown" aria-expanded="false">Privilege</a>
+                            <ul class="dropdown-menu"  aria-labelledby="navbarDropdown">
+                               
+
+              
+
+
+                             <li class="nav-item"><a class="nav-link" runat="server" id="muser"
+                                href="/manageuser">Manage User</a></li>
+
+                         <li class="nav-item"><a class="nav-link" runat="server" id="mprod"
+                                href="/manageproduct">Manage product</a></li>
+
+
+                                  <li class="nav-item"><a class="nav-link" runat="server" id="A7"
+                                href="/managecategory">Manage Category</a></li>
+
+
+                        
+
+                         <li class="nav-item"><a class="nav-link" runat="server" id="a1"
+                                href="/viewuser">View user</a></li>
+
+                                
+                         <li class="nav-item"><a class="nav-link" runat="server" id="a2"
+                                href="/stats">Statistics</a></li>
+
+                                 <li class="nav-item"><a class="nav-link" runat="server" id="a3"
+                                href="/approvereserve">List of reservations</a></li>
+
+
+                                
+                                 <li class="nav-item"><a class="nav-link" runat="server" id="a4"
+                                href="/block">Block user</a></li>
+
+                                 <li class="nav-item"><a class="nav-link" runat="server" id="a5"
+                                href="/unblockuser">Unblock user</a></li>
+
+                    </ul>
+                          </li>
+                          </asp:Panel>
+                    </ul>
+
+                  
+        
+             <asp:Label ID="Label1" runat="server" Text="Search product:"></asp:Label>
+
+
+
+                    <asp:TextBox ID="txtmovieid" runat="server" OnTextChanged="txtmovieid_TextChanged" AutoPostBack="true"></asp:TextBox>
+
+
+                    <br />
+        
+                           
+                  
+                </div>
+
+                 <asp:Panel runat="server" ID="lgregis">
+                        <asp:Label runat="server" ID="lbllgged"></asp:Label>
+                        <asp:Button runat="server" OnClick="btnlgout_Click" ID="btnlgout" Text="Log out"
+                            CssClass="btn btn-outline-info" Visible="false" />
+                    </asp:Panel>
+            </div>
+        </nav>
+        <div class="sear">
+        <asp:GridView ID="gvs" runat="server"></asp:GridView>
+        </div>
+
+        <main>
+      
+         <div id="main" class="container body-content">
+
+            <div class="row pt-5 mb-auto">
+                <div class="mx-auto">
+                    <asp:ContentPlaceHolder ID="maincontent" runat="server">
+
+                        
+                    </asp:ContentPlaceHolder>
+                   
+
+
+                     <aside class="col-sm-3 offset-sm-1">
+                        <div class="ads d-none d-xl-block">
+                            <asp:AdRotator
+                                ID="AdRotator1"
+                                AdvertisementFile="~/App_Data/ads.xml"
+                                CssClass="banner"
+                                runat="server" />
+                        </div>
+                    </aside>
+
+
+
+
+                </div>
+                 
+            </div>
+        </div>
+
+
+            </main>
+
+        <br>
+
+        <br>
+        <!-- Header-->
+        
+        <!-- Footer-->
+        
+        <footer class="py-5 bg-dark">
+            <div class="footer-top text-center">
+            <div class="container"><p class="m-0 text-center text-white">DONATE & EXCHANGE</p></div>
+            <section class="mb-4">
+      <!-- Facebook -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fa fa-facebook" aria-hidden="true"></i>
+      </a>
+
+      <!-- Twitter -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fa fa-twitter" aria-hidden="true"></i>
+      </a>
+
+
+
+      <!-- Instagram -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fa fa-instagram" aria-hidden="true"></i>
+         
+
+      </a>
+
+
+ 
+
+    </section>
+                </div>
+        </footer>
+
+           
+
+
+        <div class="modal fade" id="modadmin" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Admin Login</h4>
+                        <button type="button" class="close"
+                            data-bs-dismiss="modal">
+                            &times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <uc:login runat="server" ValidationGroup="validate" ID="adminlogin" />
+                        <br />
+                        <asp:Label ID="lblmsg" runat="server"></asp:Label>
+                        <div>
+                            <asp:Button ID="btnLogin"
+                                CssClass="btn btn-success btn-block" OnClick="btnLogin_Click" ValidationGroup="validate"  runat="server" Text="Login" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger pull-left"
+                            data-bs-dismiss="modal">
+                            Close</button>
+                        <p>Not a member? <a href="#">Sign Up</a></p>
+                        <p>Forgot <a href="#">Password?</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+
+
+        <script>
+            function adminModal() {
+                $(document).ready(function () {
+                    $('#modadmin').modal('show');
+                });
+            }
+        </script>
+
+    </form>
+     <script src='<%= ResolveClientUrl("~/Scripts/jquery-3.6.0.js") %>'>
+    </script>
+    <script src='<%= ResolveClientUrl("Scripts/WebForms/datatablelib.js") %>'></script>
+
+    
+        <script src="Scripts/scripts.js"></script>
+     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
+</body>
+</html>
